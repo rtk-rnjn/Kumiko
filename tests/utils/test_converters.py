@@ -46,9 +46,7 @@ async def test_valid_prefix(bot):
 
 @pytest.mark.asyncio
 async def test_invalid_prefix(bot):
-    finalStr = ""
-    for _ in range(103):
-        finalStr += "a"
+    finalStr = "".join("a" for _ in range(103))
     with pytest.raises(commands.BadArgument) as e:
         await dpytest.message(f">prefix {finalStr}")
         # assert dpytest.verify().message().content("!")

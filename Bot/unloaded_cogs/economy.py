@@ -37,18 +37,17 @@ class Economy(commands.Cog):
                     description="You don't even have an account yet!",
                 )
             )
+        elif len() == 0:  # type: ignore
+            await ctx.send(
+                embed=Embed(
+                    title="No items!",
+                    description="You don't have any items in your inventory!",
+                )
+            )
         else:
-            if len() == 0:  # type: ignore
-                await ctx.send(
-                    embed=Embed(
-                        title="No items!",
-                        description="You don't have any items in your inventory!",
-                    )
-                )
-            else:
-                await ctx.send(
-                    embed=Embed(title="Inventory", description="Here are your items!")
-                )
+            await ctx.send(
+                embed=Embed(title="Inventory", description="Here are your items!")
+            )
 
     @commands.hybrid_command(name="register")
     async def register(self, ctx: commands.Context) -> None:

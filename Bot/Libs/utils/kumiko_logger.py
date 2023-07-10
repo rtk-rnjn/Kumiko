@@ -14,9 +14,7 @@ class RemoveIPCNoise(logging.Filter):
 
     def filter(self, record: logging.LogRecord) -> bool:
         matchRegex = r"(connection\s[open|closed])"
-        if bool(re.search(matchRegex, record.msg)):
-            return False
-        return True
+        return not bool(re.search(matchRegex, record.msg))
 
 
 class KumikoLogger:

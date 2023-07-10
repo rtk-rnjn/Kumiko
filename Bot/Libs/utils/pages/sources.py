@@ -23,10 +23,9 @@ class BasicListSource(menus.ListPageSource):
         Returns:
             Embed: An embed with the formatted entries
         """
-        embed = Embed(
+        return Embed(
             description=f"This is number {entries}.", color=discord.Colour.random()
         )
-        return embed
 
 
 class FieldPageSource(menus.ListPageSource):
@@ -127,8 +126,8 @@ class EmbedListSource(menus.ListPageSource):
         """
         maximum = self.get_max_pages()
         embed = Embed()
-        embed.title = entries["title"] if "title" in entries else ""
-        embed.description = entries["description"] if "description" in entries else ""
+        embed.title = entries.get("title", "")
+        embed.description = entries.get("description", "")
         embed.set_image(url=entries["image"]) if "image" in entries else ...
         embed.set_thumbnail(url=entries["thumbnail"]) if "thumbnail" in entries else ...
         embed.set_footer(text=f"Page {menu.current_page + 1}/{maximum}")

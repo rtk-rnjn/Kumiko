@@ -42,7 +42,7 @@ class cache:
         **kwargs
     ):
         res = await func(id, redis_pool, *args, **kwargs)
-        if isinstance(res, str) is False:
+        if not isinstance(res, str):
             return res
         cache = KumikoCache(connection_pool=redis_pool)
         key = self.key
@@ -99,7 +99,7 @@ class cacheJson:
         **kwargs
     ):
         res = await func(id, redis_pool, *args, **kwargs)
-        if isinstance(res, dict) is False:
+        if not isinstance(res, dict):
             return res
         cache = KumikoCache(connection_pool=redis_pool)
         key = self.key
