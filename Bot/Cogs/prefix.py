@@ -34,13 +34,13 @@ class Prefix(commands.Cog):
         self, ctx: commands.Context, old_prefix: str, new_prefix: PrefixConverter
     ) -> None:
         """Updates the prefix for your server"""
-        query = """
+        guild_id = ctx.guild.id  # type: ignore
+        if old_prefix in self.bot.prefixes[guild_id]:
+            query = """
             UPDATE guild
             SET prefix = ARRAY_REPLACE(prefix, $1, $2)
             WHERE id = $3;
         """
-        guild_id = ctx.guild.id  # type: ignore
-        if old_prefix in self.bot.prefixes[guild_id]:
             async with self.pool.acquire() as conn:
                 await conn.execute(query, old_prefix, new_prefix, guild_id)
                 prefixes = self.bot.prefixes[guild_id][

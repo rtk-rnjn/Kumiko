@@ -33,6 +33,4 @@ class KumikoCPManager:
         return self.connPool
 
     def getConnPool(self) -> ConnectionPool:
-        if not self.connPool:
-            return self.createPool()
-        return self.connPool
+        return self.createPool() if not self.connPool else self.connPool

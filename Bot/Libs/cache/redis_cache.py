@@ -38,8 +38,7 @@ class KumikoCache:
             key (str): Key to get from Redis
         """
         conn: redis.Redis = redis.Redis(connection_pool=self.connection_pool)
-        res = await conn.get(key)
-        return res
+        return await conn.get(key)
 
     async def setJSONCache(
         self,
@@ -77,9 +76,7 @@ class KumikoCache:
         """
         client: redis.Redis = redis.Redis(connection_pool=self.connection_pool)
         value = await client.json().get(name=key)
-        if value is None:
-            return None
-        return value
+        return None if value is None else value
 
     async def deleteJSONCache(self, key: str, path: str = "$") -> None:
         """Deletes the JSON cache at key `key` and under `path`
@@ -102,4 +99,4 @@ class KumikoCache:
         """
         client: redis.Redis = redis.Redis(connection_pool=self.connection_pool)
         keyExists = await client.exists(key) >= 1
-        return True if keyExists else False
+        return bool(keyExists)

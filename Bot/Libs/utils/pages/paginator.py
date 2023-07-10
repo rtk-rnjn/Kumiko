@@ -110,10 +110,8 @@ class KumikoPages(discord.ui.View):
     ) -> None:
         max_pages = self.source.get_max_pages()
         try:
-            if max_pages is None:
+            if max_pages is None or max_pages > page_number >= 0:
                 # If it doesn't give maximum pages, it cannot be checked
-                await self.show_page(interaction, page_number)
-            elif max_pages > page_number >= 0:
                 await self.show_page(interaction, page_number)
         except IndexError:
             # An error happened that can be handled, so ignore it.

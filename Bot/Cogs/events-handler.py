@@ -17,12 +17,10 @@ class EventsHandler(commands.Cog):
         self.redis_pool = self.bot.redis_pool
 
     def ensureEnabled(self, config: Any) -> bool:
-        if (config is not None) and (
-            config["logs"] and config["member_events"] is True
-        ):
-            return True
-        else:
-            return False
+        return bool(
+            (config is not None)
+            and (config["logs"] and config["member_events"] is True)
+        )
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild: discord.Guild) -> None:

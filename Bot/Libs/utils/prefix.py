@@ -12,27 +12,25 @@ async def get_prefix(bot, msg: discord.Message) -> List[str]:
         return bot.default_prefix
         # return commands.when_mentioned_or(bot.default_prefix)(bot, msg)
     cachedPrefix = bot.prefixes.get(msg.guild.id)
-    if cachedPrefix is None:
-        async with bot.pool.acquire() as conn:
-            query = """
+    if cachedPrefix is not None:
+        return bot.prefixes[msg.guild.id]
+    async with bot.pool.acquire() as conn:
+        query = """
             SELECT prefix FROM guild WHERE id = $1;
             """
+        fetchPrefix = await conn.fetchval(query, msg.guild.id)
+        if fetchPrefix:
+            bot.prefixes[msg.guild.id] = fetchPrefix
+        else:
             updateQuery = """
             UPDATE guild
             SET prefix = $1
             WHERE id = $2;
             """
-            fetchPrefix = await conn.fetchval(query, msg.guild.id)
-            if fetchPrefix:
-                bot.prefixes[msg.guild.id] = fetchPrefix
-                # return commands.when_mentioned_or(bot.prefixes[msg.guild.id])(bot, msg)
-                return bot.prefixes[msg.guild.id]
-            else:
-                await conn.execute(updateQuery, [bot.default_prefix], msg.guild.id)
-                bot.prefixes[msg.guild.id] = bot.default_prefix
-                return bot.prefixes[msg.guild.id]
-                # return commands.when_mentioned_or(bot.prefixes[msg.guild.id])(bot, msg)
-    else:
+            await conn.execute(updateQuery, [bot.default_prefix], msg.guild.id)
+            bot.prefixes[msg.guild.id] = bot.default_prefix
+                        # return commands.when_mentioned_or(bot.prefixes[msg.guild.id])(bot, msg)
+        # return commands.when_mentioned_or(bot.prefixes[msg.guild.id])(bot, msg)
         return bot.prefixes[msg.guild.id]
         # return commands.when_mentioned_or(bot.prefixes[msg.guild.id])(bot, msg)
 

@@ -40,9 +40,9 @@ class Searches(commands.Cog):
     async def searchAnime(self, ctx: commands.Context, *, name: str) -> None:
         """Searches up animes"""
         async with Client(
-            transport=AIOHTTPTransport(url="https://graphql.anilist.co/"),
-            fetch_schema_from_transport=True,
-        ) as gql_session:
+                transport=AIOHTTPTransport(url="https://graphql.anilist.co/"),
+                fetch_schema_from_transport=True,
+            ) as gql_session:
             query = gql(
                 """
             query ($animeName: String!, $perPage: Int, $isAdult: Boolean!) {
@@ -88,52 +88,51 @@ class Searches(commands.Cog):
 
             if len(data["Page"]["media"]) == 0:
                 raise NoItemsError
-            else:
-                mainData = [
-                    {
-                        "title": item["title"]["romaji"],
-                        "description": str(item["description"]).replace("<br>", ""),
-                        "image": item["coverImage"]["extraLarge"],
-                        "fields": [
-                            {"name": "Native Name", "value": item["title"]["native"]},
-                            {"name": "English Name", "value": item["title"]["english"]},
-                            {"name": "Status", "value": item["status"]},
-                            {
-                                "name": "Start Date",
-                                "value": f'{item["startDate"]["year"]}-{item["startDate"]["month"]}-{item["startDate"]["day"]}',
-                            },
-                            {
-                                "name": "End Date",
-                                "value": f'{item["endDate"]["year"]}-{item["endDate"]["month"]}-{item["endDate"]["day"]}',
-                            },
-                            {"name": "Genres", "value": item["genres"]},
-                            {"name": "Synonyms", "value": item["synonyms"]},
-                            {"name": "Format", "value": item["format"]},
-                            {"name": "Season Year", "value": item["seasonYear"]},
-                            {
-                                "name": "Tags",
-                                "value": [tagItem["name"] for tagItem in item["tags"]],
-                            },
-                            {
-                                "name": "AniList URL",
-                                "value": f"https://anilist.co/anime/{item['id']}",
-                            },
-                        ],
-                    }
-                    for item in data["Page"]["media"]
-                ]
-                embedSource = EmbedListSource(mainData, per_page=1)
-                pages = KumikoPages(source=embedSource, ctx=ctx)
-                await pages.start()
+            mainData = [
+                {
+                    "title": item["title"]["romaji"],
+                    "description": str(item["description"]).replace("<br>", ""),
+                    "image": item["coverImage"]["extraLarge"],
+                    "fields": [
+                        {"name": "Native Name", "value": item["title"]["native"]},
+                        {"name": "English Name", "value": item["title"]["english"]},
+                        {"name": "Status", "value": item["status"]},
+                        {
+                            "name": "Start Date",
+                            "value": f'{item["startDate"]["year"]}-{item["startDate"]["month"]}-{item["startDate"]["day"]}',
+                        },
+                        {
+                            "name": "End Date",
+                            "value": f'{item["endDate"]["year"]}-{item["endDate"]["month"]}-{item["endDate"]["day"]}',
+                        },
+                        {"name": "Genres", "value": item["genres"]},
+                        {"name": "Synonyms", "value": item["synonyms"]},
+                        {"name": "Format", "value": item["format"]},
+                        {"name": "Season Year", "value": item["seasonYear"]},
+                        {
+                            "name": "Tags",
+                            "value": [tagItem["name"] for tagItem in item["tags"]],
+                        },
+                        {
+                            "name": "AniList URL",
+                            "value": f"https://anilist.co/anime/{item['id']}",
+                        },
+                    ],
+                }
+                for item in data["Page"]["media"]
+            ]
+            embedSource = EmbedListSource(mainData, per_page=1)
+            pages = KumikoPages(source=embedSource, ctx=ctx)
+            await pages.start()
 
     @search.command(name="manga")
     @app_commands.describe(name="The name of the manga to search")
     async def searchManga(self, ctx: commands.Context, *, name: str):
         """Searches for manga on AniList"""
         async with Client(
-            transport=AIOHTTPTransport(url="https://graphql.anilist.co/"),
-            fetch_schema_from_transport=True,
-        ) as gql_session:
+                transport=AIOHTTPTransport(url="https://graphql.anilist.co/"),
+                fetch_schema_from_transport=True,
+            ) as gql_session:
             query = gql(
                 """
             query ($mangaName: String!, $perPage: Int, $isAdult: Boolean!) {
@@ -177,42 +176,41 @@ class Searches(commands.Cog):
             data = await gql_session.execute(query, variable_values=params)
             if len(data["Page"]["media"]) == 0:
                 raise NoItemsError
-            else:
-                mainData = [
-                    {
-                        "title": item["title"]["romaji"],
-                        "description": str(item["description"]).replace("<br>", ""),
-                        "image": item["coverImage"]["extraLarge"],
-                        "fields": [
-                            {"name": "Native Name", "value": item["title"]["native"]},
-                            {"name": "English Name", "value": item["title"]["english"]},
-                            {"name": "Status", "value": item["status"]},
-                            {
-                                "name": "Start Date",
-                                "value": f'{item["startDate"]["year"]}-{item["startDate"]["month"]}-{item["startDate"]["day"]}',
-                            },
-                            {
-                                "name": "End Date",
-                                "value": f'{item["endDate"]["year"]}-{item["endDate"]["month"]}-{item["endDate"]["day"]}',
-                            },
-                            {"name": "Genres", "value": item["genres"]},
-                            {"name": "Synonyms", "value": item["synonyms"]},
-                            {"name": "Format", "value": item["format"]},
-                            {
-                                "name": "Tags",
-                                "value": [tagItem["name"] for tagItem in item["tags"]],
-                            },
-                            {
-                                "name": "AniList URL",
-                                "value": f"https://anilist.co/anime/{item['id']}",
-                            },
-                        ],
-                    }
-                    for item in data["Page"]["media"]
-                ]
-                embedSource = EmbedListSource(mainData, per_page=1)
-                pages = KumikoPages(source=embedSource, ctx=ctx)
-                await pages.start()
+            mainData = [
+                {
+                    "title": item["title"]["romaji"],
+                    "description": str(item["description"]).replace("<br>", ""),
+                    "image": item["coverImage"]["extraLarge"],
+                    "fields": [
+                        {"name": "Native Name", "value": item["title"]["native"]},
+                        {"name": "English Name", "value": item["title"]["english"]},
+                        {"name": "Status", "value": item["status"]},
+                        {
+                            "name": "Start Date",
+                            "value": f'{item["startDate"]["year"]}-{item["startDate"]["month"]}-{item["startDate"]["day"]}',
+                        },
+                        {
+                            "name": "End Date",
+                            "value": f'{item["endDate"]["year"]}-{item["endDate"]["month"]}-{item["endDate"]["day"]}',
+                        },
+                        {"name": "Genres", "value": item["genres"]},
+                        {"name": "Synonyms", "value": item["synonyms"]},
+                        {"name": "Format", "value": item["format"]},
+                        {
+                            "name": "Tags",
+                            "value": [tagItem["name"] for tagItem in item["tags"]],
+                        },
+                        {
+                            "name": "AniList URL",
+                            "value": f"https://anilist.co/anime/{item['id']}",
+                        },
+                    ],
+                }
+                for item in data["Page"]["media"]
+            ]
+            embedSource = EmbedListSource(mainData, per_page=1)
+            pages = KumikoPages(source=embedSource, ctx=ctx)
+            await pages.start()
 
     @search.command(name="gifs")
     @app_commands.describe(search="The search term to use")
@@ -226,19 +224,18 @@ class Searches(commands.Cog):
             "media_filter": "minimal",
         }
         async with self.session.get(
-            "https://tenor.googleapis.com/v2/search", params=params
-        ) as r:
+                "https://tenor.googleapis.com/v2/search", params=params
+            ) as r:
             data = await r.json(loads=orjson.loads)
             if len(data["results"]) == 0 or r.status == 404:
                 raise NoItemsError
-            else:
-                mainData = [
-                    {"image": item["media_formats"]["gif"]["url"]}
-                    for item in data["results"]
-                ]
-                embedSource = EmbedListSource(mainData, per_page=1)
-                pages = KumikoPages(source=embedSource, ctx=ctx)
-                await pages.start()
+            mainData = [
+                {"image": item["media_formats"]["gif"]["url"]}
+                for item in data["results"]
+            ]
+            embedSource = EmbedListSource(mainData, per_page=1)
+            pages = KumikoPages(source=embedSource, ctx=ctx)
+            await pages.start()
 
     @search.command(name="mc-mods")
     @app_commands.describe(
@@ -260,50 +257,49 @@ class Searches(commands.Cog):
             "facets": f'[["categories:{str(modloader).lower()}"]]',
         }
         async with self.session.get(
-            "https://api.modrinth.com/v2/search", params=params
-        ) as r:
+                "https://api.modrinth.com/v2/search", params=params
+            ) as r:
             data = await r.json(loads=orjson.loads)
             if len(data["hits"]) == 0:
                 raise NoItemsError
-            else:
-                mainData = [
-                    {
-                        "title": item["title"],
-                        "description": item["description"],
-                        "thumbnail": item["icon_url"],
-                        "fields": [
-                            {"name": "Author", "value": item["author"]},
-                            {"name": "Categories", "value": item["categories"]},
-                            {"name": "Versions", "value": item["versions"]},
-                            {
-                                "name": "Latest Version",
-                                "value": item["latest_version"],
-                            },
-                            {
-                                "name": "Date Created",
-                                "value": format_dt(
-                                    ciso8601.parse_datetime(item["date_created"])
-                                ),
-                            },
-                            {
-                                "name": "Date Modified",
-                                "value": format_dt(
-                                    ciso8601.parse_datetime(item["date_modified"])
-                                ),
-                            },
-                            {"name": "Downloads", "value": item["downloads"]},
-                            {"name": "License", "value": item["license"]},
-                            {
-                                "name": "Modrinth URL",
-                                "value": f"https://modrinth.com/{item['project_type']}/{item['slug']}",
-                            },
-                        ],
-                    }
-                    for item in data["hits"]
-                ]
-                embedSource = EmbedListSource(mainData, per_page=1)
-                pages = KumikoPages(source=embedSource, ctx=ctx)
-                await pages.start()
+            mainData = [
+                {
+                    "title": item["title"],
+                    "description": item["description"],
+                    "thumbnail": item["icon_url"],
+                    "fields": [
+                        {"name": "Author", "value": item["author"]},
+                        {"name": "Categories", "value": item["categories"]},
+                        {"name": "Versions", "value": item["versions"]},
+                        {
+                            "name": "Latest Version",
+                            "value": item["latest_version"],
+                        },
+                        {
+                            "name": "Date Created",
+                            "value": format_dt(
+                                ciso8601.parse_datetime(item["date_created"])
+                            ),
+                        },
+                        {
+                            "name": "Date Modified",
+                            "value": format_dt(
+                                ciso8601.parse_datetime(item["date_modified"])
+                            ),
+                        },
+                        {"name": "Downloads", "value": item["downloads"]},
+                        {"name": "License", "value": item["license"]},
+                        {
+                            "name": "Modrinth URL",
+                            "value": f"https://modrinth.com/{item['project_type']}/{item['slug']}",
+                        },
+                    ],
+                }
+                for item in data["hits"]
+            ]
+            embedSource = EmbedListSource(mainData, per_page=1)
+            pages = KumikoPages(source=embedSource, ctx=ctx)
+            await pages.start()
 
 
 async def setup(bot: KumikoCore) -> None:

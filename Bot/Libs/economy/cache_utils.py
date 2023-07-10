@@ -30,6 +30,4 @@ async def getUser(
     """
     async with pool.acquire() as conn:
         user = await conn.fetchval(query, id)
-        if user is None:
-            return None
-        return dict(user)
+        return None if user is None else dict(user)
